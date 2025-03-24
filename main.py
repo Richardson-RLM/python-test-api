@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from app.service.cpf_service import load_blacklist, verify_cpf
+from service.cpf_service import load_blacklist, verify_cpf
 
 app = Flask(__name__)
 
@@ -10,5 +10,6 @@ def verify_cpf_route(cpf):
     status = verify_cpf(cpf, blacklist)
     return jsonify({"status": status})
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
