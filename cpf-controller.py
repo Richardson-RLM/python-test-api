@@ -1,26 +1,13 @@
-import re
 from flask import Flask, jsonify
+from app.service.cpf_service import load_blacklist, verify_cpf
 
 app = Flask(__name__)
-
-def clean_cpf(cpf):
-    """Remove dots and hyphens from the CPF."""
-    return re.sub(r'\D', '', cpf)  
-
-
-def load_blacklist():
-    try:
-        with open("blacklist.txt", "r") as file:
-            return set(clean_cpf(line.strip()) for line in file)
-    except FileNotFoundError:
-        return set()
 
 blacklist = load_blacklist()
 
 @app.route('/<cpf>', methods=['GET'])
-def verify_cpf(cpf):
-    cpf = clean_cpf(cpf) 
-    status = "BLOCK" if cpf in blacklist else "FREE"
+def verify_cpf_route(cpf):
+    status = verify_cpf(cpf, blacklist)
     return jsonify({"status": status})
 
 if __name__ == '__main__':
